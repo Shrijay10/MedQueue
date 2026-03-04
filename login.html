@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MedQueue | Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563EB'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="min-h-screen bg-gray-100 flex">
+
+  <!-- Left Branding Section -->
+  <div class="hidden md:flex w-1/2 bg-primary text-white flex-col justify-center items-center p-12">
+    <h1 class="text-4xl font-bold mb-4">MedQueue</h1>
+    <p class="text-lg text-blue-100 text-center max-w-md">
+      Smart Appointment & Queue Management System  
+      designed to digitize hospital OPD flow with real-time tracking.
+    </p>
+  </div>
+
+  <!-- Right Login Section -->
+  <div class="flex w-full md:w-1/2 justify-center items-center p-6">
+
+    <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
+
+      <div class="mb-8 text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">Sign In</h2>
+        <p class="text-sm text-gray-500">Access your dashboard</p>
+      </div>
+
+      <div class="space-y-5">
+
+        <!-- Email -->
+        <div>
+          <label class="text-sm text-gray-600">Email</label>
+          <input id="email" type="email" placeholder="Enter your email"
+            class="mt-1 w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="text-sm text-gray-600">Password</label>
+          <input id="password" type="password" placeholder="Enter password"
+            class="mt-1 w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+
+        <!-- Role -->
+        <div>
+          <label class="text-sm text-gray-600">Role</label>
+          <select id="role"
+            class="mt-1 w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            <option value="">Select Role</option>
+            <option value="patient">Patient</option>
+            <option value="receptionist">Receptionist</option>
+            <option value="doctor">Doctor</option>
+          </select>
+        </div>
+
+        <!-- Button -->
+        <button onclick="login()"
+          class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition duration-200">
+          Sign In
+        </button>
+
+        <!-- Error -->
+        <p id="error" class="text-red-500 text-sm text-center"></p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+<script src="js/login.js"></script>
+</body>
+</html>

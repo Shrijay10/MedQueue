@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MedQueue | Doctor Dashboard</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563EB'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-white border-r border-gray-200 p-6 hidden md:block">
+
+    <div class="flex items-center gap-2 mb-10">
+      <i data-lucide="stethoscope" class="w-6 h-6 text-primary"></i>
+      <h2 class="text-xl font-bold text-primary">MedQueue</h2>
+    </div>
+
+    <ul class="space-y-6 text-gray-600">
+
+      <li class="flex items-center gap-3 text-primary font-medium cursor-pointer">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        Dashboard
+      </li>
+
+      <li id="logoutBtn"
+          class="flex items-center gap-3 text-red-600 hover:text-red-700 cursor-pointer font-medium">
+        <i data-lucide="log-out" class="w-5 h-5"></i>
+        Logout
+      </li>
+
+    </ul>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="flex-1 p-10">
+    <div class="max-w-6xl mx-auto space-y-12">
+
+      <!-- ===== Summary Cards ===== -->
+      <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">Total OPD Today</p>
+          <h3 id="dTodayOPD" class="text-3xl font-bold mt-3">0</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <div class="flex items-center gap-2 text-red-600">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            <p class="text-sm text-gray-500">Emergency Cases</p>
+          </div>
+          <h3 id="dEmergency"
+              class="text-3xl font-bold text-red-600 mt-3">0</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">Total Appointments</p>
+          <h3 id="dAppointments" class="text-3xl font-bold mt-3">0</h3>
+        </div>
+
+      </div>
+
+      <!-- ===== Doctor Controls ===== -->
+      <div class="grid lg:grid-cols-2 gap-8">
+
+        <!-- Doctor Status -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+          <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+            <i data-lucide="user-check" class="w-5 h-5 text-primary"></i>
+            Doctor Status
+          </h2>
+
+          <select id="doctorStatus"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+            <option value="available">Available</option>
+            <option value="busy">Busy</option>
+            <option value="emergency">Emergency</option>
+          </select>
+
+          <button onclick="updateDoctorStatus()"
+            class="mt-6 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+            Update Status
+          </button>
+        </div>
+
+        <!-- ===== OPD Control ===== -->
+<div class="bg-white p-8 rounded-2xl shadow-sm border">
+  <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+    <i data-lucide="power" class="w-5 h-5 text-primary"></i>
+    OPD Control
+  </h2>
+
+  <!-- Status Display -->
+  <div class="flex items-center justify-between mb-6">
+    <p class="text-gray-600">Current OPD Status:</p>
+    <span id="opdStatusBadge"
+      class="px-4 py-1 rounded-full text-sm font-medium bg-green-100 text-green-600">
+      OPEN
+    </span>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex gap-4">
+    <button onclick="setOPDStatus('open')"
+      class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+      Open OPD
+    </button>
+
+    <button onclick="setOPDStatus('closed')"
+      class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition">
+      Close OPD
+    </button>
+  </div>
+</div>
+
+        <!-- Admit Patient -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+          <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+            <i data-lucide="bed" class="w-5 h-5 text-primary"></i>
+            Admit Patient
+          </h2>
+
+          <input type="number"
+            id="admitToken"
+            placeholder="Enter token number"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+
+          <button onclick="markAdmitted()"
+            class="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">
+            Mark as Admitted
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ===== Queue Overview ===== -->
+      <div class="bg-white p-8 rounded-2xl shadow-sm border">
+        <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+          <i data-lucide="list" class="w-5 h-5 text-primary"></i>
+          Queue Overview
+        </h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+
+            <thead>
+              <tr class="border-b text-sm text-gray-500">
+                <th class="py-3">Token</th>
+                <th class="py-3">Status</th>
+                <th class="py-3">Priority</th>
+              </tr>
+            </thead>
+
+            <tbody id="doctorQueue">
+              <tr>
+                <td colspan="3" class="py-4 text-center text-gray-500">
+                  No queue data
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      <!-- Admission History -->
+<div class="bg-white p-8 rounded-2xl shadow-sm border">
+  <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+    <i data-lucide="clipboard-list" class="w-5 h-5 text-primary"></i>
+    Today's Admitted Patients
+  </h2>
+
+  <ul id="admissionList" class="space-y-3 text-gray-600">
+    <li>No admitted patients</li>
+  </ul>
+</div>
+
+      <!-- ===== Analytics Section ===== -->
+      <div class="bg-white p-8 rounded-2xl shadow-sm border">
+        <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+          <i data-lucide="bar-chart-3" class="w-5 h-5 text-primary"></i>
+          OPD Analysis Summary
+        </h2>
+
+        <ul id="analysisSummary" class="space-y-3 text-gray-600">
+          <li>Loading analysis...</li>
+        </ul>
+      </div>
+
+    </div>
+    
+  </main>
+
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+  lucide.createIcons();
+
+  document.getElementById("logoutBtn").addEventListener("click", function() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  });
+</script>
+
+<script src="js/doctor.js"></script>
+
+</body>
+</html>

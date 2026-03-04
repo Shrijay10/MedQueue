@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MedQueue | Patient Dashboard</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563EB'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-white border-r border-gray-200 p-6 hidden md:block">
+
+    <div class="flex items-center gap-2 mb-12">
+      <i data-lucide="activity" class="w-6 h-6 text-primary"></i>
+      <h2 class="text-xl font-bold text-primary">MedQueue</h2>
+    </div>
+
+    <ul class="space-y-6 text-gray-600">
+
+      <li class="flex items-center gap-3 text-primary font-medium cursor-pointer">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        Dashboard
+      </li>
+
+      <li id="logoutBtn"
+          class="flex items-center gap-3 text-red-600 hover:text-red-700 cursor-pointer font-medium">
+        <i data-lucide="log-out" class="w-5 h-5"></i>
+        Logout
+      </li>
+
+    </ul>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="flex-1 p-10">
+    <div class="max-w-6xl mx-auto space-y-10">
+
+      <!-- ===== Header ===== -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">
+            Welcome Back 👋
+          </h1>
+          <p class="text-sm text-gray-500">
+            Manage your appointments and track your token in real time.
+          </p>
+        </div>
+        <div class="text-sm text-gray-500">
+          Today: <span id="todayDate" class="font-medium"></span>
+        </div>
+      </div>
+
+      <!-- ===== Summary Cards ===== -->
+      <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">Total Patients Today</p>
+          <h3 id="totalOpd" class="text-3xl font-bold mt-3">0</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">Now Serving</p>
+          <h3 id="nowServing" class="text-3xl font-bold text-green-600 mt-3">--</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">My Token</p>
+          <h3 id="myToken" class="text-3xl font-bold text-primary mt-3">--</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">Estimated Waiting</p>
+          <h3 id="estimatedWait" class="text-3xl font-bold text-yellow-600 mt-3">-- min</h3>
+        </div>
+
+      </div>
+
+      <!-- ===== Extra Info ===== -->
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="bg-white p-6 rounded-2xl border shadow-sm">
+          <p class="text-sm text-gray-500">Queue Position</p>
+          <h3 id="queuePosition" class="text-2xl font-semibold mt-2">--</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border shadow-sm">
+          <p class="text-sm text-gray-500">Average Consultation Time</p>
+          <h3 class="text-2xl font-semibold mt-2">10 Minutes</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border shadow-sm">
+          <p class="text-sm text-gray-500">Hospital Status</p>
+          <h3 id="patientOpdStatus"
+              class="text-2xl font-semibold mt-2 text-green-600">
+            OPEN
+          </h3>
+        </div>
+
+      </div>
+
+      <!-- ===== Appointment ===== -->
+      <div class="bg-white p-8 rounded-2xl shadow-sm border">
+
+        <h2 class="text-xl font-bold text-gray-800">
+          Book Appointment
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+
+          <input id="patientName"
+            placeholder="Patient Name"
+            class="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+
+          <input id="patientAge" type="number"
+            placeholder="Age"
+            class="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+
+          <input id="patientAddress"
+            placeholder="Address"
+            class="md:col-span-2 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+
+          <select id="department"
+            class="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+            <option value="">Select Department</option>
+            <option value="Medicine">Medicine</option>
+            <option value="ENT">ENT</option>
+            <option value="Ortho">Ortho</option>
+          </select>
+
+          <input id="appointmentDate" type="date"
+            class="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none">
+
+        </div>
+
+        <button onclick="bookAppointment()"
+          class="mt-8 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+          Book Appointment
+        </button>
+
+        <p id="appointmentMessage" class="mt-4 text-sm"></p>
+
+      </div>
+
+      <!-- ===== Visit History ===== -->
+      <div class="bg-white p-8 rounded-2xl shadow-sm border">
+
+        <h2 class="text-lg font-semibold mb-6">
+          My Visit History
+        </h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+
+            <thead class="border-b text-sm text-gray-500">
+              <tr>
+                <th class="py-3">Date</th>
+                <th class="py-3">Token</th>
+                <th class="py-3">Department</th>
+                <th class="py-3">Status</th>
+                <th class="py-3">Report</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyTable">
+              <tr>
+                <td colspan="5" class="py-4 text-center text-gray-500">
+                  No history found
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ================= CHATBOT ================= -->
+
+<div id="chatWidget"
+     class="fixed bottom-24 right-5 w-80 h-[450px] bg-white shadow-2xl rounded-2xl border hidden flex flex-col z-50">
+
+  <div class="bg-blue-600 text-white p-3 rounded-t-2xl flex justify-between items-center">
+    <span>AI Hospital Assistant</span>
+    <button onclick="toggleChat()">✖</button>
+  </div>
+
+  <div id="chatBox" class="flex-1 p-3 overflow-y-auto text-sm"></div>
+
+  <div class="p-3 border-t flex gap-2">
+    <input id="chatInput"
+      class="flex-1 border rounded p-2 text-sm focus:outline-none"
+      placeholder="Ask anything...">
+    <button onclick="sendMessage()"
+      class="bg-blue-600 text-white px-3 rounded">
+      ➤
+    </button>
+  </div>
+
+</div>
+
+<button id="chatFloatingBtn"
+  onclick="toggleChat()"
+  class="fixed bottom-5 right-5 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50">
+  🤖
+</button>
+
+<!-- ================= SCRIPTS ================= -->
+
+<script>
+  lucide.createIcons();
+
+  document.getElementById("logoutBtn").addEventListener("click", function() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  });
+
+  document.getElementById("todayDate").innerText =
+    new Date().toLocaleDateString();
+</script>
+
+<script src="js/patient.js"></script>
+
+</body>
+</html>

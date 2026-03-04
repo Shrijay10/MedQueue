@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MedQueue | Receptionist Dashboard</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563EB'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-white border-r border-gray-200 p-6 hidden md:block">
+
+    <div class="flex items-center gap-2 mb-10">
+      <i data-lucide="activity" class="w-6 h-6 text-primary"></i>
+      <h2 class="text-xl font-bold text-primary">MedQueue</h2>
+    </div>
+
+    <ul class="space-y-6 text-gray-600">
+
+      <li class="flex items-center gap-3 text-primary font-medium cursor-pointer">
+        <i data-lucide="monitor" class="w-5 h-5"></i>
+        Dashboard
+      </li>
+
+      <li id="logoutBtn"
+          class="flex items-center gap-3 text-red-600 hover:text-red-700 cursor-pointer font-medium">
+        <i data-lucide="log-out" class="w-5 h-5"></i>
+        Logout
+      </li>
+
+    </ul>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="flex-1 p-10">
+    <div class="max-w-6xl mx-auto space-y-12">
+
+      <!-- ===== Summary Cards ===== -->
+      <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+
+        <!-- Total Tokens -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <p class="text-sm text-gray-500">Today Tokens</p>
+          <h3 id="totalTokens" class="text-3xl font-bold mt-3">0</h3>
+        </div>
+
+        <!-- Emergency -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <div class="flex items-center gap-2 text-red-600">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            <p class="text-sm text-gray-500">Emergency Cases</p>
+          </div>
+          <h3 id="emergencyCount"
+              class="text-3xl font-bold text-red-600 mt-3">0</h3>
+        </div>
+
+        <!-- Admitted -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border">
+          <div class="flex items-center gap-2 text-green-600">
+            <i data-lucide="hospital" class="w-5 h-5"></i>
+            <p class="text-sm text-gray-500">Admitted Patients</p>
+          </div>
+          <h3 id="admittedCount"
+              class="text-3xl font-bold text-green-600 mt-3">0</h3>
+        </div>
+
+      </div>
+
+      <!-- ===== Action Section ===== -->
+      <div class="grid lg:grid-cols-2 gap-8">
+
+        <!-- Now Serving -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+
+          <h2 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+            <i data-lucide="play-circle" class="w-5 h-5 text-primary"></i>
+            Update Now Serving
+          </h2>
+
+          <label class="text-sm text-gray-600">
+            Current Token Number
+          </label>
+
+          <input
+            type="number"
+            id="nowServingToken"
+            class="mt-2 w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none"
+            placeholder="Enter token number"
+          >
+
+          <button onclick="updateNowServing()"
+            class="mt-6 bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+            Update
+          </button>
+
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+
+          <h2 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+            <i data-lucide="settings" class="w-5 h-5 text-primary"></i>
+            Quick Actions
+          </h2>
+
+          <label class="text-sm text-gray-600">
+            Token Number
+          </label>
+
+          <input
+            type="number"
+            id="actionToken"
+            class="mt-2 w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:outline-none"
+            placeholder="Enter token"
+          >
+
+          <div class="flex gap-4 mt-6">
+
+            <button onclick="markEmergency()"
+              class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg transition">
+              Mark Emergency
+            </button>
+
+            <!-- <button onclick="markAdmitted()"
+              class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition">
+              Mark Admitted
+            </button> -->
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===== Live Queue ===== -->
+      <div class="bg-white p-8 rounded-2xl shadow-sm border">
+
+        <h2 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+          <i data-lucide="list" class="w-5 h-5 text-primary"></i>
+          Live Queue Status
+        </h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+
+            <thead>
+              <tr class="border-b text-sm text-gray-500">
+                <th class="py-3">Token</th>
+                <th class="py-3">Status</th>
+                <th class="py-3">Priority</th>
+              </tr>
+            </thead>
+
+            <tbody id="liveQueue">
+              <!-- Dynamic rows from JS -->
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+  lucide.createIcons();
+
+  document.getElementById("logoutBtn").addEventListener("click", function() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  });
+</script>
+
+<script src="js/receptionist.js"></script>
+
+</body>
+</html>

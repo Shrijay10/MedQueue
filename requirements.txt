@@ -1,0 +1,6 @@
+flask
+flask-cors
+firebase-admin
+pyjwt
+reportlab
+yagmail

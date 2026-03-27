@@ -29,8 +29,10 @@ def today():
 # ================================
 SECRET_KEY = "mysecretkey"
 
-EMAIL_USER = "medqueuesup@gmail.com"
-EMAIL_PASS = "gjjmsnfhzicweyad"
+# EMAIL_USER = "medqueuesup@gmail.com"
+EMAIL_USER = "EMAIL_USER"
+EMAIL_PASS = "EMAIL_PASS"
+# EMAIL_PASS = "gjjmsnfhzicweyad"
 
 yag = yagmail.SMTP(EMAIL_USER, EMAIL_PASS)
 
